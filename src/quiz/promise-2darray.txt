@@ -1,1 +1,8 @@
 Explain the code execution based on the order of the messages logged in src/quiz/promise-2darray.txt.
+
+sumPromise1 is added to the microqueue before sumPromise2. After the main thread is complete, the callbacks in the microqueue are executed.  
+sumPromise1 outputs the 2 synchronous log statements, one before resolving and one after. Since the input is an array, it adds a callback via setTimeout to the event loop 
+(pending callbacks). Since there's still a promise in the microqueue, sumPromise2 gets executed, outputting the first log statement. Since this promise's input is not
+an array, an error is thrown (and logged), finally, the last message is logged. Since sumPromise2 threw an error, the catch block immediately executes, 
+logging the error message. Finally, the event loop executes the callback added by sumPromise1 (logging the resolve message). This causes the then block to execute, 
+logging the resulting value.
